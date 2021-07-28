@@ -1,4 +1,3 @@
-import inspect
 import ntpath
 import shutil
 import os
@@ -32,32 +31,6 @@ if not args.sp:
 main_fast_inference.logger = args.logger
 
 logger = None
-
-
-def set_args(*in_args):
-    global args
-
-    args = alphapose_args(*in_args)
-    args.dataset = 'coco'
-    args.fast_inference = False
-    args.save_img = True
-    args.sp = True
-    if not args.sp:
-        torch.multiprocessing.set_start_method('forkserver', force=True)
-        torch.multiprocessing.set_sharing_strategy('file_system')
-
-
-def set_logger(in_logger=None):
-    global logger
-
-    if in_logger is None:
-        _frame = inspect.stack()[1]
-        _module = inspect.getmodule(_frame[0])
-        _filename = _module.__file__
-        log_name = os.path.basename(_filename).rsplit(".", 1)[0]
-        logger = file_logger(log_name=log_name)
-    else:
-        logger = in_logger
 
 
 def model_load():
