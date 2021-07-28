@@ -4,8 +4,9 @@ from functools import reduce
 
 import torch.utils.data as data
 from ..pose import generateSampleBox
-from opt import opt
+from common.arguments import sppe_args
 
+opt = sppe_args()
 
 class Mscoco(data.Dataset):
     def __init__(self, train=True, sigma=1,

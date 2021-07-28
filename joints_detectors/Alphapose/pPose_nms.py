@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
-import torch
 import json
 import os
 import zipfile
 import time
-from multiprocessing.dummy import Pool as ThreadPool
+
+import torch
 import numpy as np
-from opt import opt
+
+from multiprocessing.dummy import Pool as ThreadPool
+from joints_detectors.Alphapose.opt import get_opt
+
+opt = get_opt()
+
 
 ''' Constant Configuration '''
 delta1 = 1

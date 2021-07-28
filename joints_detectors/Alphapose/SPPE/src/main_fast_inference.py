@@ -1,3 +1,4 @@
+import pathlib
 import sys
 
 import torch
@@ -6,11 +7,12 @@ import torch.nn as nn
 import torch.utils.data
 import torch.utils.data.distributed
 
-from SPPE.src.models.FastPose import createModel
-from SPPE.src.utils.img import flip, shuffleLR
-
+from matplotlib.pyplot import get
 from common.utils import get_device
-from joints_detectors.Alphapose.opt import opt
+from common.arguments import BASE_DIR
+from .models.FastPose import createModel
+from .utils.img import flip, shuffleLR
+
 
 try:
     torch._utils._rebuild_tensor_v2
@@ -41,7 +43,7 @@ class InferenNet(nn.Module):
                 'Loading pose model from joints_detectors/Alphapose/models/sppe/duc_se.pth')
         sys.stdout.flush()
         model.load_state_dict(torch.load(
-            'joints_detectors/Alphapose/models/sppe/duc_se.pth', map_location=get_device()))
+            BASE_DIR / 'joints_detectors/Alphapose/models/sppe/duc_se.pth', map_location=get_device()))
         model.eval()
         self.pyranet = model
 
@@ -73,8 +75,9 @@ class InferenNet_fast(nn.Module):
         else:
             print('Loading pose model from models/sppe/duc_se.pth')
 
+        parent = pathlib.Path(__file__).parent
         model.load_state_dict(torch.load(
-            'models/sppe/duc_se.pth', map_location=get_device()))
+            parent / 'models/sppe/duc_se.pth', map_location=get_device()))
         model.eval()
         self.pyranet = model
 

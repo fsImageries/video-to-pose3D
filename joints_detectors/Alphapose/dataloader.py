@@ -1,28 +1,28 @@
 import os
 import sys
 import time
-from multiprocessing import Queue as pQueue
-from threading import Thread
 
 import cv2
-import numpy as np
 import torch
+import numpy as np
 import torch.multiprocessing as mp
 import torch.utils.data as data
 import torchvision.transforms as transforms
+
 from PIL import Image
+from threading import Thread
+from multiprocessing import Queue as pQueue
 from torch.autograd import Variable
-
-from SPPE.src.utils.eval import getPrediction, getMultiPeakPrediction
-from SPPE.src.utils.img import load_image, cropBox, im_to_torch
-from matching import candidate_reselect as matching
-from opt import opt
-from pPose_nms import pose_nms
-from yolo.darknet import Darknet
-from yolo.preprocess import prep_image, prep_frame
-from yolo.util import dynamic_write_results
-
 from common.utils import get_device
+from joints_detectors.Alphapose.opt import get_opt
+
+from .SPPE.src.utils.eval import getPrediction, getMultiPeakPrediction
+from .SPPE.src.utils.img import load_image, cropBox, im_to_torch
+from .matching import candidate_reselect as matching
+from .pPose_nms import pose_nms
+from .yolo.darknet import Darknet
+from .yolo.preprocess import prep_image, prep_frame
+from .yolo.util import dynamic_write_results
 
 # import the Queue class from Python 3
 if sys.version_info >= (3, 0):
@@ -31,10 +31,12 @@ if sys.version_info >= (3, 0):
 else:
     from Queue import Queue, LifoQueue
 
+opt = get_opt()
+
 if opt.vis_fast:
-    from fn import vis_frame_fast as vis_frame
+    from .fn import vis_frame_fast as vis_frame
 else:
-    from fn import vis_frame
+    from .fn import vis_frame
 
 
 class Image_loader(data.Dataset):
@@ -647,8 +649,8 @@ class WebcamLoader:
 
 class DataWriter:
     def __init__(self, save_video=False,
-                 savepath='examples/res/1.avi', fourcc=cv2.VideoWriter_fourcc(*'XVID'), fps=25, frameSize=(640, 480),
-                 queueSize=1024):
+                 savepath='examples/res/1.avi', outpath="examples",
+                 fourcc=cv2.VideoWriter_fourcc(*'XVID'), fps=25, frameSize=(640, 480),queueSize=1024):
         if save_video:
             # initialize the file video stream along with the boolean
             # used to indicate if the thread should be stopped or not
@@ -660,9 +662,10 @@ class DataWriter:
         # initialize the queue used to store frames read from
         # the video file
         self.Q = Queue(maxsize=queueSize)
+        self.outpath = outpath
         if opt.save_img:
-            if not os.path.exists(opt.outputpath + '/vis'):
-                os.mkdir(opt.outputpath + '/vis')
+            if not os.path.exists(self.outpath + '/vis'):
+                os.mkdir(self.outpath + '/vis')
 
     def start(self):
         # start a thread to read frames from the file video stream
@@ -694,7 +697,7 @@ class DataWriter:
                             cv2.waitKey(30)
                         if opt.save_img:
                             cv2.imwrite(os.path.join(
-                                opt.outputpath, 'vis', im_name), img)
+                                self.outpath, 'vis', im_name), img)
                         if opt.save_video:
                             self.stream.write(img)
                 else:
@@ -720,7 +723,7 @@ class DataWriter:
                             cv2.waitKey(30)
                         if opt.save_img:
                             cv2.imwrite(os.path.join(
-                                opt.outputpath, 'vis', im_name), img)
+                                self.outpath, 'vis', im_name), img)
                         if opt.save_video:
                             self.stream.write(img)
             else:

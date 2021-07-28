@@ -3,17 +3,14 @@ from __future__ import division
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-try:
-    from util import count_parameters as count
-    from util import convert2cpu as cpu
-except ImportError:
-    from yolo.util import count_parameters as count
-    from yolo.util import convert2cpu as cpu
+
+from torch.autograd import Variable
 from PIL import Image, ImageDraw
+from .util import count_parameters as count
+from .util import convert2cpu as cpu
 
 
 def letterbox_image(img, inp_dim):

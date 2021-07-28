@@ -1,7 +1,9 @@
 import torch.nn as nn
-from .util_models import ConcatTable, CaddTable, Identity
 import math
-from opt import opt
+from common.arguments import sppe_args
+from .util_models import ConcatTable, CaddTable, Identity
+
+opt = sppe_args()
 
 
 class Residual(nn.Module):

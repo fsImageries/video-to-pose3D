@@ -3,10 +3,12 @@ import os
 from SPPE.src.main_fast_inference import *
 from dataloader import ImageLoader, DetectionLoader, DetectionProcessor, DataWriter, Mscoco
 from fn import getTime
-from opt import opt
+# from opt import opt, get_opt
+from joints_detectors.Alphapose.opt import get_opt
 from pPose_nms import write_json
 from tqdm import tqdm
 
+opt = get_opt()
 
 def main(args):
     inputpath = args.inputpath

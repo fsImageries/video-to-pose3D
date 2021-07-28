@@ -6,6 +6,7 @@ import time
 import cv2
 import numpy as np
 import torch
+
 from torch._six import string_classes
 
 RED = (0, 0, 255)

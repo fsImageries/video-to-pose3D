@@ -3,7 +3,9 @@ from torch.autograd import Variable
 
 from .layers.SE_Resnet import SEResnet
 from .layers.DUC import DUC
-from opt import opt
+from joints_detectors.Alphapose.opt import get_opt
+
+opt = get_opt()
 
 
 def createModel():

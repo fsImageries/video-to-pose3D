@@ -1,7 +1,9 @@
 import torch.nn as nn
 import math
 from .util_models import ConcatTable, CaddTable, Identity
-from opt import opt
+from common.arguments import sppe_args
+
+opt = sppe_args()
 
 
 def Residual(numIn, numOut, *arg, stride=1, net_type='preact', useConv=False, **kw):

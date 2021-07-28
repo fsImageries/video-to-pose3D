@@ -3,8 +3,8 @@
 # Written by Jiefeng Li (jeff.lee.sjtu@gmail.com)
 # -----------------------------------------------------
 
-import numpy as np
 import torch
+import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 sigmas = np.array([.26, .25, .25, .35, .35, .79, .79, .72, .72, .62, .62, 1.07, 1.07, .87, .87, .89, .89])

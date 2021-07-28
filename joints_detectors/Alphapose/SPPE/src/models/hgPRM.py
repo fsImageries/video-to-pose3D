@@ -1,10 +1,14 @@
 import torch.nn as nn
+import torch
+import math
+
+from torch.autograd import Variable
 from .layers.PRM import Residual as ResidualPyramid
 from .layers.Residual import Residual as Residual
-from torch.autograd import Variable
-import torch
-from opt import opt
-import math
+
+from common.arguments import sppe_args
+
+opt = sppe_args()
 
 
 class Hourglass(nn.Module):

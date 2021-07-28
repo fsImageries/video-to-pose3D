@@ -1,22 +1,24 @@
+import inspect
 import ntpath
 import shutil
 import os
-import inspect
 
 import numpy as np
 import torch
-import SPPE.src.main_fast_inference
 
-from dataloader import DetectionLoader, DetectionProcessor, DataWriter, Mscoco, VideoLoader
+from tqdm import tqdm
 from common.utils import calculate_area, get_device
 from common.logger import file_logger
 from common.arguments import alphapose_args
-from SPPE.src.main_fast_inference import *
-from pPose_nms import write_json
-from fn import getTime
-from tqdm import tqdm
-from opt import opt
+from joints_detectors.Alphapose.opt import get_opt
+from .SPPE.src import main_fast_inference
+from .dataloader import DetectionLoader, DetectionProcessor, DataWriter, Mscoco, VideoLoader
+from .SPPE.src.main_fast_inference import *
+from .pPose_nms import write_json
+from .fn import getTime
 
+
+opt = get_opt()
 
 args = opt
 args.dataset = 'coco'
@@ -27,7 +29,7 @@ if not args.sp:
     torch.multiprocessing.set_start_method('forkserver', force=True)
     torch.multiprocessing.set_sharing_strategy('file_system')
 
-SPPE.src.main_fast_inference.logger = args.logger
+main_fast_inference.logger = args.logger
 
 logger = None
 
@@ -152,7 +154,7 @@ def handle_video(video_file):
     save_path = os.path.join(args.outputpath, 'AlphaPose_' +
                              ntpath.basename(video_file).split('.')[0] + '.avi')
     # writer = DataWriter(args.save_video, save_path, cv2.VideoWriter_fourcc(*'XVID'), fps, frameSize).start()
-    writer = DataWriter(args.save_video).start()
+    writer = DataWriter(args.save_video, outpath=args.outputpath).start()
     args.logger.info("Start pose estimation...")
     # print('Start pose estimation...')
     im_names_desc = tqdm(range(data_loader.length()))

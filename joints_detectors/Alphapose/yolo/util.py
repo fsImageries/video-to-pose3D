@@ -1,18 +1,16 @@
 
 from __future__ import division
-from common.utils import get_device
 
 import torch 
-import torch.nn as nn
-import torch.nn.functional as F 
-from torch.autograd import Variable
 import numpy as np
 import cv2 
+import torch.nn as nn
+import torch.nn.functional as F 
 import matplotlib.pyplot as plt
-try:
-    from bbox import bbox_iou
-except ImportError:
-    from yolo.bbox import bbox_iou
+
+from torch.autograd import Variable
+from common.utils import get_device
+from .bbox import bbox_iou
 
 
 def count_parameters(model):

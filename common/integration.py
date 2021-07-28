@@ -5,7 +5,7 @@ from pyUtils import pyhelper
 def check_outgoings(args, data):
     send_maya = getattr(args, "send_maya", None)
 
-    if send_maya is not None:
+    if send_maya:
         send_to_maya(data)
 
 

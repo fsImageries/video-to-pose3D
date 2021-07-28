@@ -2,8 +2,8 @@ import os
 import cv2
 import time
 import pathlib
+import pickle
 
-# from ..common import visualization
 from common import visualization
 from common.arguments import inference_args, alphapose_args, BASE_DIR
 from common.camera import *
@@ -53,13 +53,22 @@ def ckpt_time(ckpt=None):
 
 def get_detector_2d(detector_name, *args):
     def get_alpha_pose():
-        import opt  # TODO Fix import madness in all .py files
+        # import opt  # TODO Fix import madness in all .py files
+        # import joints_detectors.Alphapose.opt
         alpha_opt = alphapose_args(*args)
-        file_name = pathlib.Path(__file__).stem
-        # alpha_opt.logger = file_logger(
-        #     log_dir=BASE_DIR / "logs", log_name=file_name)
+        alpha_opt.dataset = 'coco'
+        alpha_opt.fast_inference = False
+        alpha_opt.save_img = True
+        alpha_opt.sp = True
         alpha_opt.logger = LOGGER
-        opt.opt = alpha_opt
+
+        alpha_dir = pathlib.Path(__file__).parent.parent / \
+            "joints_detectors/Alphapose"
+        with open(alpha_dir/"opt.pkl", "wb") as outp:
+            pickle.dump(alpha_opt, outp, pickle.HIGHEST_PROTOCOL)
+
+        # opt.opt = alpha_opt
+        # joints_detectors.Alphapose.opt.opt = alpha_opt
         import joints_detectors.Alphapose.gene_npz as alpha_pose
         # alpha_pose.set_logger()
         return alpha_pose.generate_kpts
@@ -180,6 +189,7 @@ def visualize(preds, in_kpts, output, video, fps, bitrate, limit, downsample, si
 
 
 def inference(args):
+    args.logger.info("Start processing...\n")
     time0 = ckpt_time()
 
     detector_2d = get_detector_2d(args.detector_2d, args.outputpath)
@@ -226,7 +236,7 @@ def inference(args):
                   args.viz_downsample, args.viz_size, args.viz_skip)
 
     ckpt, _ = ckpt_time(time3)
-    args.logger.info("total spend {:2f} second".format(ckpt))
+    args.logger.info("total spend {:2f} second\n".format(ckpt))
 
     return prediction
 

@@ -1,9 +1,8 @@
-from opt import opt
-try:
-    from utils.img import transformBoxInvert, transformBoxInvert_batch, findPeak, processPeaks
-except ImportError:
-    from SPPE.src.utils.img import transformBoxInvert, transformBoxInvert_batch, findPeak, processPeaks
 import torch
+from .img import transformBoxInvert, transformBoxInvert_batch, findPeak, processPeaks
+from common.arguments import sppe_args
+
+opt = sppe_args()
 
 
 class DataLogger(object):
@@ -39,7 +38,7 @@ def heatmapAccuracy(output, label, idxs):
 
     norm = torch.ones(preds.size(0)) * opt.outputResH / 10
     dists = calc_dists(preds, gt, norm)
-    #print(dists)
+    # print(dists)
     acc = torch.zeros(len(idxs) + 1)
     avg_acc = 0
     cnt = 0
@@ -103,7 +102,8 @@ def postprocess(output):
             hm = output[i][j]
             pX, pY = int(round(p[i][j][0])), int(round(p[i][j][1]))
             if 0 < pX < opt.outputResW - 1 and 0 < pY < opt.outputResH - 1:
-                diff = torch.Tensor((hm[pY][pX + 1] - hm[pY][pX - 1], hm[pY + 1][pX] - hm[pY - 1][pX]))
+                diff = torch.Tensor(
+                    (hm[pY][pX + 1] - hm[pY][pX - 1], hm[pY + 1][pX] - hm[pY - 1][pX]))
                 p[i][j] += diff.sign() * 0.25
     p -= 0.5
 
@@ -133,7 +133,8 @@ def getPrediction(hms, pt1, pt2, inpH, inpW, resH, resW):
     for i in range(preds.size(0)):
         for j in range(preds.size(1)):
             hm = hms[i][j]
-            pX, pY = int(round(float(preds[i][j][0]))), int(round(float(preds[i][j][1])))
+            pX, pY = int(round(float(preds[i][j][0]))), int(
+                round(float(preds[i][j][1])))
             if 0 < pX < opt.outputResW - 1 and 0 < pY < opt.outputResH - 1:
                 diff = torch.Tensor(
                     (hm[pY][pX + 1] - hm[pY][pX - 1], hm[pY + 1][pX] - hm[pY - 1][pX]))
@@ -142,7 +143,8 @@ def getPrediction(hms, pt1, pt2, inpH, inpW, resH, resW):
 
     preds_tf = torch.zeros(preds.size())
 
-    preds_tf = transformBoxInvert_batch(preds, pt1, pt2, inpH, inpW, resH, resW)
+    preds_tf = transformBoxInvert_batch(
+        preds, pt1, pt2, inpH, inpW, resH, resW)
 
     return preds, preds_tf, maxval
 
@@ -214,6 +216,7 @@ def getPrediction_batch(hms, pt1, pt2, inpH, inpW, resH, resW):
     preds[:, :, 1] += diff2.squeeze(-1)
 
     preds_tf = torch.zeros(preds.size())
-    preds_tf = transformBoxInvert_batch(preds, pt1, pt2, inpH, inpW, resH, resW)
+    preds_tf = transformBoxInvert_batch(
+        preds, pt1, pt2, inpH, inpW, resH, resW)
 
     return preds, preds_tf, maxval

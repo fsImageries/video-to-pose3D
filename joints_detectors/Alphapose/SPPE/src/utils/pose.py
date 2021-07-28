@@ -1,11 +1,13 @@
-from .img import (load_image, drawGaussian, drawBigCircle, drawSmallCircle, cv_rotate,
-                       cropBox, transformBox, transformBoxInvert, flip, shuffleLR, drawCOCO)
-from .eval import getPrediction
 import torch
 import numpy as np
 import random
-from opt import opt
 
+from .img import (load_image, drawGaussian, drawBigCircle, drawSmallCircle, cv_rotate,
+                       cropBox, transformBox, transformBoxInvert, flip, shuffleLR, drawCOCO)
+from .eval import getPrediction
+from common.arguments import sppe_args
+
+opt = sppe_args()
 
 def rnd(x):
     return max(-2 * x, min(2 * x, np.random.randn(1)[0] * x))

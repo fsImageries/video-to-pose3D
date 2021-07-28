@@ -2,9 +2,9 @@ from __future__ import division
 
 import torch 
 import random
-
 import numpy as np
 import cv2
+
 from common.utils import get_device
 
 def confidence_filter(result, confidence):

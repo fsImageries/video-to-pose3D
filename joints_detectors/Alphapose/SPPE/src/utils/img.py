@@ -1,14 +1,16 @@
 import numpy as np
 import cv2
 import torch
+import matplotlib
 import scipy.misc
-from torchvision import transforms
 import torch.nn.functional as F
+
+from torchvision import transforms
 from scipy.ndimage import maximum_filter
 
 from PIL import Image
 from copy import deepcopy
-import matplotlib
+
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 

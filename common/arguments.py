@@ -8,6 +8,7 @@
 import argparse
 import pathlib
 import os
+import torch
 from typing import Union
 
 BASE_DIR = pathlib.Path(__file__).resolve(
@@ -295,6 +296,63 @@ def alphapose_args(outputpath: pathlib.Path = None):
     args.outputpath = "examples/res/"
 
     if outputpath is not None:
-        args.outputpath = outputpath
+        args.outputpath = str(outputpath)
+
+    return args
+
+
+def sppe_args():
+    args = Arguments()
+
+    args.expID = "default"
+    args.dataset = "coco"
+    args.nThreads = 30
+    args.debug = False
+    args.snapshot = 1
+
+    args.addDPG = False
+
+    args.netType = "hgPRM"
+    args.loadModel = None
+    args.Continue = False
+    args.nFeats = 256
+    args.nClasses = 17
+    args.nStack = 8
+
+    args.LR = 2.5e-4
+    args.momentum = 0
+    args.weightDecay = 0
+    args.crit = "MSE"
+    args.optMethod = "rmsprop"
+
+    args.nEpochs = 50
+    args.epoch = 0
+    args.trainBatch = 40
+    args.validBatch = 40
+    args.trainIters = 0
+    args.valIters = 0
+    args.init = None
+
+    args.inputResH = 384
+    args.inputResW = 320
+    args.outputResH = 96
+    args.outputResW = 80
+    args.scale = 0.25
+    args.rotate = 30
+    args.hmGauss = 1
+
+    args.baseWidth = 9
+    args.cardinality = 5
+    args.nResidual = 1
+
+    args.dist = 1
+    args.backend = "gloo"
+    args.port = None
+
+    if args.Continue:
+        opt = torch.load(
+            "../exp/{}/{}/option.pkl".format(args.dataset, args.expID))
+        opt.Continue = True
+        opt.nEpochs = 50
 
     return args

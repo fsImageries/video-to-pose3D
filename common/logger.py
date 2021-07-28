@@ -11,7 +11,7 @@ from common.arguments import BASE_DIR
 
 def file_logger(log_dir: Union[str, pathlib.Path] = None, log_name: str = None) -> logging.Logger:
     if log_dir is None:
-        log_dir = BASE_DIR / "logs"
+        log_dir = BASE_DIR.parent / "logs"
 
     if isinstance(log_dir, str):
         log_dir = pathlib.Path(log_dir)
@@ -38,4 +38,3 @@ def file_logger(log_dir: Union[str, pathlib.Path] = None, log_name: str = None) 
     logger.addHandler(handler)
 
     return logger
-

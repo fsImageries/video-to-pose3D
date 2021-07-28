@@ -3,6 +3,7 @@ from common.utils import Timer, add_path
 from common.arguments import simple_cli_args, inference_args
 from inference.inference_logic import inference, LOGGER
 
+
 add_path()
 
 

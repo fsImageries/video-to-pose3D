@@ -6,7 +6,7 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.utils.data
 import numpy as np
-from opt import opt
+from opt import opt, get_opt
 
 from dataloader import WebcamLoader, DataWriter, crop_from_dets, Mscoco
 from yolo.darknet import Darknet
@@ -22,6 +22,8 @@ from fn import getTime
 import cv2
 
 from pPose_nms import write_json
+
+opt = get_opt()
 
 args = opt
 args.dataset = 'coco'
